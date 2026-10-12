@@ -16,3 +16,4 @@ TEST DATA AND SQL QUERIES FILE
 Added a test data using the code INSERT INTO, and then modified the data using the code UPDATE, and removing data using the code DELETE FROM.
 
 The file inlude eight documented SELECT queries , covering filtering, JOINs, aggregate functions , GROUPBY, HAVING, and a subquery.
+
