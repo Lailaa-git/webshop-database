@@ -1,20 +1,67 @@
-Database structure and 3nf
-The webshop database contains four tables: customers, products, orders, and order_items.
-The database follows Third Normal Form. Each table has a primary key, and non-key columns depend on the key. 
+# Webshop Database
+# Database Structure and Third Normal Form (3NF)
 
-Index
-I created an index on orders(customer_id) to support queries that search for orders belonging to a specific customer.
+The database contains four tables:
 
-Transaction
-The file 02_transaction.sql contains a transaction with multiple SQL statements. The transaction inserts a test customer and a test product, then commits the changes together.
+- **customers:** `customer_id` is the primary key. `name` and `email` depend on `customer_id`.
+- **products:** `product_id` is the primary key. `name` and `price` depend on `product_id`.
+- **orders:** `order_id` is the primary key. `customer_id` and `order_date` depend on `order_id`.
+- **order_items:** The composite primary key is (`order_id`, `product_id`). `quantity` depends on both columns because it describes how many units of a specific product belong to a specific order.
 
-Permissions
-The file 03_roles_permissions.sql creates a limited role called webshop_reader. It grants permission to connect to the database and read table data using SELECT.
+The tables follow 3NF because non-key columns depend on the key, the whole key, and nothing but the key.
 
-SQL files
-* create_tables.sql — creates the database tables and relationships.
-* 01_index.sql — compares query plans and creates an index.
-* 02_transaction.sql — demonstrates a transaction.
-* 03_roles_permissions.sql — creates a limited database role.
+## Index
+I created an index on `orders(customer_id)` to improve searches for orders belonging to a customer.
+The query plans can change depending on the amount of data. PostgreSQL may use a Bitmap Heap Scan when an index is useful. With a small table, it may choose a Sequential Scan because reading the whole table is cheaper. This is expected behaviour.
 
-GitHub Repository
+## Transaction
+The file `02_transaction.sql` demonstrates a transaction.
+It creates a customer, an order, and an order item together. These records are related because the order belongs to the customer, and the order item belongs to the order.
+The transaction uses `BEGIN` and `COMMIT` to save the changes together.
+The script also synchronizes the SERIAL sequences to avoid duplicate key errors.
+
+## Backup and Restore
+I created a backup using:
+
+```bash
+pg_dump -U postgres -d webshop -F c -f webshop_backup.dump
+```
+
+I created a new database and restored the backup:
+
+```bash
+createdb -U postgres webshop_restore
+pg_restore -U postgres -d webshop_restore webshop_backup.dump
+```
+
+I compared the row counts in both databases.
+
+| Table | Original | Restored |
+|---|---:|---:|
+| customers | 2 | 2 |
+| products | 1 | 1 |
+| orders | 1 | 1 |
+| order_items | 1 | 1 |
+
+The matching row counts confirm that the backup and restore worked.
+
+## Permissions
+The file `03_roles_permisitions.sql` creates a limited role called `webshop_reader`.
+The role can connect to the database and read data using SELECT. INSERT, UPDATE, and DELETE are denied.
+
+## SQL Files
+
+- `create_tables.sql` — creates the database tables and relationships.
+- `populate_and_query.sql` — inserts sample data and runs queries.
+- `01_index.sql` — compares query plans and creates an index.
+- `02_transaction.sql` — demonstrates a transaction.
+- `03_roles_permisitions.sql` — creates a limited database role.
+
+## Screenshots
+
+Screenshots show:
+- Query plans before and after creating the index.
+- Successful transaction execution.
+- Allowed SELECT and denied INSERT/UPDATE/DELETE for the reader role.
+- Backup and restore row count comparison.
+
