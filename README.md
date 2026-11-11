@@ -64,4 +64,10 @@ Screenshots show:
 - Successful transaction execution.
 - Allowed SELECT and denied INSERT/UPDATE/DELETE for the reader role.
 - Backup and restore row count comparison.
+<img width="161" height="102" alt="Screenshot 2026-11-11 at 15 50 37" src="https://github.com/user-attachments/assets/487d812a-aafc-4da7-901f-0144f1939ab3" />
+
+<img width="174" height="104" alt="Screenshot 2026-11-11 at 15 50 46" src="https://github.com/user-attachments/assets/43956e9d-0504-4f40-b23d-c6b60eea94f3" />
+
+<img width="87" height="139" alt="Screenshot 2026-11-11 at 15 50 56" src="https://github.com/user-attachments/assets/cd06f823-08d0-4691-9d0d-70b5ef1899b1" />
+
 
